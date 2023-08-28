@@ -2,6 +2,7 @@ package com.devsuperior.dsmeta.services;
 
 import com.devsuperior.dsmeta.dto.SaleDTO;
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleSumaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.repositories.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,23 @@ public class SaleService {
 	}
 
 	public Page<SaleDTO> getReport(String minDateStr, String maxDateStr, String name, Pageable pageable) {
-		LocalDate minDate = minDateStr.isEmpty() ? parseMaxDate(maxDateStr)
-				.minusYears(1L) : LocalDate.parse(minDateStr);
-		LocalDate maxDate = maxDateStr.isEmpty() ? LocalDate.now() : LocalDate.parse(maxDateStr);
+		LocalDate minDate = parseMinDate(minDateStr, maxDateStr);
+		LocalDate maxDate = parseMaxDate(maxDateStr);
 
 		Page<Sale> result = repository.searchSalesByParams(minDate, maxDate, name, pageable);
 		return result.map(SaleDTO::new);
+	}
+
+	public Page<SaleSumaryDTO> getSumary(String minDateStr, String maxDateStr, Pageable pageable){
+		LocalDate minDate = parseMinDate(minDateStr, maxDateStr);
+		LocalDate maxDate = parseMaxDate(maxDateStr);
+
+		return repository.searchSalesSumary(minDate, maxDate, pageable);
+	}
+
+	private LocalDate parseMinDate(String minDateStr, String maxDateStr) {
+		LocalDate maxDate = parseMaxDate(maxDateStr);
+		return minDateStr.isEmpty() ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr);
 	}
 
 	private LocalDate parseMaxDate(String maxDateStr) {

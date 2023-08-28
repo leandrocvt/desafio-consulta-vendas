@@ -10,20 +10,20 @@ public class SaleDTO {
 	private Double amount;
 	private LocalDate date;
 
-	private String name;
+	private String sellerName;
 
 	public SaleDTO(Long id, Double amount, LocalDate date, String name) {
 		this.id = id;
 		this.amount = amount;
 		this.date = date;
-		this.name = name;
+		this.sellerName = name;
 	}
 
 	public SaleDTO(Sale entity) {
 		id = entity.getId();
 		amount = entity.getAmount();
 		date = entity.getDate();
-		name = entity.getSeller().getName();
+		sellerName = entity.getSeller().getName();
 	}
 
 	public Long getId() {
@@ -39,6 +39,6 @@ public class SaleDTO {
 	}
 
 	public String getName() {
-		return name;
+		return sellerName;
 	}
 }
